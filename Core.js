@@ -24,11 +24,9 @@ const currentDay = new Intl.DateTimeFormat('en-US', options).format(currentDate)
 
 const speed = require('performance-now');
 const eco = require('discord-mongoose-economy');
-const thiccysapi = require('textmaker-thiccy');
 // const ffmpeg = require('fluent-ffmpeg');
 // const ffmpegPath = require('ffmpeg-static').path;
 // ffmpeg.setFfmpegPath(ffmpegPath);
-const maker = require('mumaker');
 const Jimp = require('jimp');  // for full dp etc.
 const modapk = require("tod-api");
 const { hentai } = require('./lib/scraper2.js');
@@ -38,101 +36,53 @@ const { isLimit, limitAdd, getLimit, giveLimit, kurangBalance, getBalance, isGam
 const githubstalk = require('./lib/githubstalk');
 let { covid } = require('./lib/covid.js');
 const { Gempa } = require("./lib/gempa.js");
-
+const getLyrics = require("@fantox01/lyrics-scraper");
 const spaceemojis = ["🌌", "🌠", "🚀", "🪐", "🌟"];     // list of emojis for Space CMDs.
 const manyemojis = ["😄", "👍", "👏", "👌", "🥇", "🌟", "🎉", "🙌", "🤩", "💯", "🔥", "✨", "🚀", "💖", "🌈", "🌞", "🌠", "🌼", "💪", "😎", "💫", "💓", "🎈", "🎁", "🍾", "🎊", "🥳", "👑", "🌺", "🌻", "🌸"];
 const os = require('os');       // for os info
-
 const gis = require("g-i-s");
-const { MessageType } = require('@whiskeysockets/baileys');
-const {
-  FajarNews,
-  BBCNews,
-  metroNews,
-  CNNNews,
-  iNews,
-  KumparanNews,
-  TribunNews,
-  DailyNews,
-  DetikNews,
-  OkezoneNews,
-  CNBCNews,
-  KompasNews,
-  SindoNews,
-  TempoNews,
-  IndozoneNews,
-  AntaraNews,
-  RepublikaNews,
-  VivaNews,
-  KontanNews,
-  MerdekaNews,
-  KomikuSearch,
-  AniPlanetSearch,
-  KomikFoxSearch,
-  KomikStationSearch,
-  MangakuSearch,
-  KiryuuSearch,
-  KissMangaSearch,
-  KlikMangaSearch,
-  PalingMurah,
-  LayarKaca21,
-  AminoApps,
-  Mangatoon,
-  WAModsSearch,
-  Emojis,
-  CoronaInfo,
-  JalanTikusMeme,
-  Cerpen,
-  Quotes,
-  Couples,
-  Darkjokes
-} = require("dhn-api");
+
+const { downloadContentFromMessage,
+  WA_DEFAULT_EPHEMERAL,
+  proto, jid,
+  getContentType,
+  generateWAMessageContent,
+  generateWAMessageFromContent,
+  BufferJSON,
+  prepareWAMessageMedia,
+  MessageType,
+  areJidsSameUser, } = require('@whiskeysockets/baileys');
+
+
 //"parse-ms": "^1.1.0",
 
-
-
 //
-if (time2 < "23:59:00") {
-
-  var nowtime = 'Good night 🌌'
-
-}
-
-if (time2 < "19:00:00") {
-
-  var nowtime = 'Good afternoon 🌆'
-
-}
-
-if (time2 < "18:00:00") {
-
-  var nowtime = 'Good afternoon 🌇'
-
-}
-
-if (time2 < "15:00:00") {
-
-  var nowtime = 'Good afternoon 🏞'
-
-}
-
-if (time2 < "11:00:00") {
-
-  var nowtime = 'Good morning 🌅'
-
-}
+let nowtime = '';
 
 if (time2 < "05:00:00") {
-
-  var nowtime = 'Good night 🏙'
-
+  nowtime = 'Good night 🏙';
+} else if (time2 < "11:00:00") {
+  nowtime = 'Good morning 🌅';
+} else if (time2 < "15:00:00") {
+  nowtime = 'Good afternoon 🏞';
+} else if (time2 < "18:00:00") {
+  nowtime = 'Good evening 🌇';
+} else if (time2 < "19:00:00") {
+  nowtime = 'Good evening 🌆';
+} else {
+  nowtime = 'Good night 🌌';
 }
 
 
 
-//
+
+// 
 const timestampe = speed();
 const latensie = speed() - timestampe
+const used = process.memoryUsage();
+const cpu = os.cpus()[0];
+const totalCpuUsage = (100 * (cpu.times.user + cpu.times.nice + cpu.times.sys + cpu.times.irq) / cpu.times.idle).toFixed(2);
+const systemName = os.platform() + ' ' + os.release();
 
 var low;
 try {
@@ -196,7 +146,6 @@ if (global.db)
   };
 
 
-
 //
 let isSleeping = false; // Move the declaration here.
 let banUser = JSON.parse(fs.readFileSync('./database/banUser.json'));
@@ -252,7 +201,7 @@ var yye = tgel.getYear();
 //
 module.exports = A17 = async (A17, m, chatUpdate, store) => {
   try {
-    var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectreply.selectedRowId : (m.mtype == 'templateButtonreplyMessage') ? m.message.templateButtonreplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectreply.selectedRowId || m.text) : ''
+    var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ''
     var budy = (typeof m.text == 'string' ? m.text : '')
     const prefix = global.prefa
     const isCmd = body.startsWith(prefix)
@@ -296,6 +245,7 @@ module.exports = A17 = async (A17, m, chatUpdate, store) => {
     autoreadsw = true
     const content = JSON.stringify(m.message)
     const q = args.join(' ')
+    // const button = m.body
 
     const isQuotedVideo = m.mtype === 'extendedTextMessage' && content.includes('videoMessage')
     const isQuotedAudio = m.mtype === 'extendedTextMessage' && content.includes('audioMessage')
@@ -341,13 +291,18 @@ module.exports = A17 = async (A17, m, chatUpdate, store) => {
       fs.writeFileSync("./storage/user/user.json", JSON.stringify(pendaftar));
     }
 
-    if (global.autoreadpmngc) {
-      if (command) {
-        await A17.sendPresenceUpdate("composing", m.chat);
-        A17.sendReadReceipt(from, m.sender, [m.key.id]);
-      }
-    }
 
+
+    //----------------------------------------------------------------------------------------------------------//
+
+
+
+    // if (global.autoreadpmngc) {
+    //   if (command) {
+    //     await A17.sendPresenceUpdate("composing", m.chat);
+    //     A17.sendReadReceipt(from, m.sender, [m.key.id]);
+    //   }
+    // }
 
 
     //
@@ -363,6 +318,27 @@ module.exports = A17 = async (A17, m, chatUpdate, store) => {
     //     A17.sendReadReceipt(m.chat, m.sender, [m.key.id]);
     //   }
     // }
+
+
+    if (global.autoreadgc) {
+      if (command) {
+        await A17.sendPresenceUpdate('composing', m.chat);
+
+        // Create an array of message keys to mark as read
+        const keysToMarkAsRead = [
+          {
+            remoteJid: m.chat,
+            id: m.key.id,
+            participant: m.sender,
+          },
+          // You can add more message keys to mark multiple messages as read
+        ];
+
+        // Use the sock object to read the specified messages
+        await A17.readMessages(keysToMarkAsRead);
+      }
+    }
+
 
     if (global.autoRecord) {
       if (m.chat) {
@@ -384,15 +360,19 @@ module.exports = A17 = async (A17, m, chatUpdate, store) => {
 
 
 
-    //Dm and Groups Autoreply/Bot chat
-    /*
-    if (!isCmd && !m.isGroup){
-        const botreply = await axios.get(`http://api.brainshop.ai/get?bid=166512&key=5nz1Ha6nS9Zx1MfT&uid=[uid]&msg=[msg]=[${budy}]`)
-        txt = `${botreply.data.cnt}`
-        m.reply(txt)
-        }    
-        
-     */
+    // //Dm and Groups Autoreply/Bot chat
+
+    // if (!isCmd && !m.isGroup){
+    //     const botreply = await axios.get(`http://api.brainshop.ai/get?bid=166512&key=5nz1Ha6nS9Zx1MfT&uid=[uid]&msg=[msg]=[${budy}]`)
+    //     txt = `${botreply.data.cnt}`
+    //     m.reply(txt)
+    //     }    
+
+
+
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -445,7 +425,7 @@ module.exports = A17 = async (A17, m, chatUpdate, store) => {
     //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
-    //don't edit this part.
+    // //don't edit this part.
     const formatTime = (seconds) => {
       const hours = Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
@@ -743,12 +723,33 @@ Typed *surrender* to surrender and admited defeat`
     }
 
 
+    //============= [LIST RESPONCE CHECKING START ]================
 
+    //-----------------------------------------------------------------------------------------------------------------------------------//
+    try {
+      if (m.mtype === "interactiveResponseMessage") {
+        console.log("interactiveResponseMessage Detected!")
+        let msg = m.message[m.mtype] || m.msg
+        if (msg.nativeFlowResponseMessage && !m.isBot) {
+          let { id } = JSON.parse(msg.nativeFlowResponseMessage.paramsJson) || {}
+          if (id) {
+            let emit_msg = {
+              key: { ...m.key }, // SET RANDOME MESSAGE ID  
+              message: { extendedTextMessage: { text: id } },
+              pushName: m.pushName,
+              messageTimestamp: m.messageTimestamp || 754785898978
+            }
+            return A17.ev.emit("messages.upsert", { messages: [emit_msg], type: "append" })
+          }
+        }
+      }
+    } catch (e) { console.log("ERROR WHILE CHECKING LIST RESPONCE : ", e) }
+    //============= [LIST RESPONCE CHECKING END ]================
 
     //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
-    //
+
     switch (command) {
 
 
@@ -788,86 +789,6 @@ Typed *surrender* to surrender and admited defeat`
       }
         break;
 
-
-        
-  case 'qt': {
-    if (!args[0] && !m.quoted) {
-      return m.reply(`Please provide a text (Type or mention a message) !`);
-    }
-    
-    try {
-      let userPfp;
-      if (m.quoted) {
-        userPfp = await A17.profilePictureUrl(m.quoted.sender, "image");
-      } else {
-        userPfp = await A17.profilePictureUrl(m.sender, "image");
-      }
-  
-      const waUserName = pushname;
-      const quoteText = m.quoted ? m.quoted.body : args.join(" ");
-  
-      const quoteJson = {
-        type: "quote",
-        format: "png",
-        backgroundColor: "#FFFFFF",
-        width: 700,
-        height: 580,
-        scale: 2,
-        messages: [
-          {
-            entities: [],
-            avatar: true,
-            from: {
-              id: 1,
-              name: waUserName,
-              photo: {
-                url: userPfp,
-              },
-            },
-            text: quoteText,
-            replyMessage: {},
-          },
-        ],
-      };
-  
-      const quoteResponse = await axios.post("https://bot.lyo.su/quote/generate", quoteJson, {
-        headers: { "Content-Type": "application/json" },
-      });
-  
-      const buffer = Buffer.from(quoteResponse.data.result.image, "base64");
-      A17.sendImageAsSticker(m.chat, buffer, m, {
-        packname: `${global.BotName}`,
-        author: waUserName,
-      });
-    } catch (error) {
-      console.error(error);
-      m.reply("Error generating quote!");
-    }
-    break;
-  }
-
-
-
-      case 'support': case 'supportgc': {
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-
-        A17.sendMessage(from, { react: { text: "💫", key: m.key } })
-        reply(`⚙ *My developer's group:* ⚙ http://gg.gg/12ewfs`)
-      }
-        break;
-
-
-      case 'repo': case 'botrepo': {
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-
-        A17.sendMessage(from, { react: { text: "💫", key: m.key } })
-        reply(`⚙ My Source Code is </> - https://github.com/Kai0071/A17`)
-      }
-        break;
-
-
       case 'owner': case 'creator': case 'mod': case 'mods': {
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
@@ -878,174 +799,71 @@ Typed *surrender* to surrender and admited defeat`
         break;
 
 
-      case 'setbotpp': {
-
-        if (!isCreator) return reply(mess.owner)
-        if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.owner)
-        A17.sendMessage(from, { react: { text: "🫡", key: m.key } })
-
-        if (!quoted) return `*Send/reply Image With Caption* ${prefix + command}`
-        if (!/image/.test(mime)) return `*Send/reply Image With Caption* ${prefix + command}`
-        if (/webp/.test(mime)) return `*Send/reply Image With Caption* ${prefix + command}`
-        let media = await A17.downloadAndSaveMediaMessage(quoted)
-        await A17.updateProfilePicture(botNumber, { url: media }).catch((err) => fs.unlinkSync(media))
-        m.reply(mess.jobdone)
-      }
-        break;
-
-
-      //
-      case 'changeprefix':
-      case 'setprefix':
-
+      case "link": {
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.botowner)
-        A17.sendMessage(from, { react: { text: "🛡️", key: m.key } })
 
-        if (args.length !== 1) {
-          return m.reply(`Please provide a single character as the new prefix.`);
-        } else {
-          const newPrefix = args[0];
-          try {
-            global.prefa = [newPrefix];
-            return m.reply(`${pushname} Successfully changed Prefix to "${newPrefix}"`);
-          } catch (error) {
-            console.error('Error changing prefix:', error);
-            return m.reply(`An error occurred while changing the prefix. Please try again later.`);
+        try {
+
+          await A17.sendMessage(from, { react: { text: "❤", key: m.key } });
+
+          let { data } = await axios.get('https://api.github.com/repos/Kai0071/A17');
+          let teks = `                      *A17's Script*\n\n                 *Total Stars*: ${data.stargazers_count}⭐\n              *Total Forks*: ${data.forks_count} forks\n    *GitHub*: github.com/Kai0071/A17\n\nDon't forget to follow me on *GitHub* and give a ⭐️ to my projects.`;
+
+          let msg = generateWAMessageFromContent(m.key.remoteJid, {
+            viewOnceMessage: {
+              message: {
+                "messageContextInfo": {
+                  "deviceListMetadata": {},
+                  "deviceListMetadataVersion": 2
+                },
+                interactiveMessage: proto.Message.InteractiveMessage.create({
+                  body: proto.Message.InteractiveMessage.Body.create({
+                    text: teks
+                  }),
+                  footer: proto.Message.InteractiveMessage.Footer.create({
+                    text: "                    Powered by A17"
+                  }),
+                  header: proto.Message.InteractiveMessage.Header.create({
+                    title: "                        A17 2024",
+                    subtitle: "Test Subtitle",
+                    hasMediaAttachment: false
+                  }),
+                  nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                    buttons: [
+                      {
+                        "name": "cta_url",
+                        "buttonParamsJson": "{\"display_text\":\"Bot Source Code\",\"url\":\"https://github.com/Kai0071/A17\",\"merchant_url\":\"https://github.com/Kai0071/A17\"}"
+                      }
+                    ]
+                  })
+                })
+              }
+            }
+          }, {});
+
+          if (!msg || !msg.key || !msg.key.remoteJid || !msg.key.id) {
+            const errorMessage = 'Error: Invalid message key.';
+            console.error(errorMessage);
+            return reply(errorMessage);
           }
+
+          await A17.relayMessage(msg.key.remoteJid, msg.message, {
+            messageId: msg.key.id
+          });
+        } catch (error) {
+          console.error('Error generating and relaying message:', error);
+          return reply('Error generating and relaying message.');
         }
 
-
-      //
-      case 'restart':
-        await A17.sendMessage(from, { react: { text: "⚙", key: m.key } });
-        if (!isCreator) return reply(mess.botowner)
-
-        await A17.sendMessage(from, { text: mess.waiting });
-        await A17.sendMessage(from, { react: { text: "✅", key: m.key } });
-        await A17.sendMessage(from, { text: 'Restarting Success!' });
-
-        // Delay the shutdown by 5 seconds using sleep function
-        //await sleep(5000);
-
-        // Use PM2 to restart the script
-        pm2.restart('index', (err) => {
-          if (err) {
-            A17.sendMessage(from, { react: { text: "❌", key: m.key } });
-            A17.sendMessage(from, { text: 'Restarting Failed!' });
-          } else {
-            return;
-          }
-        });
         break;
-
-
-      //
-      case 'shutdown': case 'sleep':
-        if (!isCreator) return reply(mess.owner)
-        if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.owner)
-        await A17.sendMessage(from, { react: { text: "⚠️", key: m.key } })
-
-        reply(`Okey bye time to sleep!`)
-        await sleep(5000)
-        process.exit()
-        break;
-
-
-      case 'public': {
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.owner)
-        A17.sendMessage(from, { react: { text: "🫡", key: m.key } })
-
-        A17.public = true
-        reply('I am now Publicly accessable!')
-        A17.setStatus(`Mode : Public`)
       }
-        break;
 
-
-      case 'self': {
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.botowner)
-
-        A17.sendMessage(from, { react: { text: "🫡", key: m.key } })
-        A17.public = false
-        reply('Only Owner can use me now!')
-        A17.setStatus(`Mode : Self`)
-      }
-        break;
-
-
-      case 'autotyping':
-      case 'auto-typing':
-
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.botowner)
-        A17.sendMessage(from, { react: { text: '❤', key: m.key } });
-
-        if (args.length === 0) {
-          if (global.autoTyping) {
-            return m.reply(`Auto typing in group chats is currently *enabled*.\n\nTo disable, use \`${global.prefa[0]}autotyping off\`.`);
-          } else {
-            return m.reply(`Auto typing in group chats is currently *disabled*.\n\nTo enable, use \`${global.prefa[0]}autotyping on\`.`);
-          }
-        } else if (args.length === 1 && (args[0] === 'on' || args[0] === 'off')) {
-          const status = args[0];
-          if (status === 'on') {
-            global.autoTyping = true;
-            return m.reply(`Auto typing in group chats is now *enabled*.`);
-          } else {
-            global.autoTyping = false;
-            return m.reply(`Auto typing in group chats is now *disabled*.`);
-          }
-        } else {
-          return m.reply(`Usage: \`${global.prefa[0]}autotyping [on/off]\``);
-        }
-        break;
-
-
-      case 'autorecord':
-      case 'auto-recording':
-
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.botowner)
-        A17.sendMessage(from, { react: { text: '❤', key: m.key } });
-
-        if (args.length === 0) {
-          if (global.autoRecord) {
-            return m.reply(`Auto recording is currently *enabled*.\n\nTo disable, use \`${global.prefa[0]}autorecord off\`.`);
-          } else {
-            return m.reply(`Auto recording is currently *disabled*.\n\nTo enable, use \`${global.prefa[0]}autorecord on\`.`);
-          }
-        } else if (args.length === 1 && (args[0] === 'on' || args[0] === 'off')) {
-          const status = args[0];
-          if (status === 'on') {
-            global.autoRecord = true;
-            return m.reply(`Auto recording is now *enabled*.`);
-          } else {
-            global.autoRecord = false;
-            return m.reply(`Auto recording is now *disabled*.`);
-          }
-        } else {
-          return m.reply(`Usage: \`${global.prefa[0]}autorecord [on/off]\``);
-        }
-        break;
 
 
       //Hosted platfrom info
       case 'server':
       case 'sysinfo': {
-        const used = process.memoryUsage();
-        const cpu = os.cpus()[0];
-        const totalCpuUsage = (100 * (cpu.times.user + cpu.times.nice + cpu.times.sys + cpu.times.irq) / cpu.times.idle).toFixed(2);
-        const systemName = os.platform() + ' ' + os.release();
 
         const respon = `
   🤖 *A17's Server Info* 🤖
@@ -1068,6 +886,124 @@ Typed *surrender* to surrender and admited defeat`
         m.reply(respon);
         break;
       }
+
+
+      case 'ipcheck':
+      case 'checkip':
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+
+        if (!args[0]) {
+          return reply(`Please provide an IP address to check.\nExample: ${prefix}ipcheck 207.97.227.239`);
+        }
+
+        const ipAddress = args[0];
+
+        // Encode the IP address
+        const encodedIpAddress = encodeURIComponent(ipAddress);
+
+        // Construct the API URL with the encoded IP address
+        const apiUrl = `https://www.exenoz.tech/api/ip-location?ip=${encodedIpAddress}`;
+
+        try {
+
+          const response = await axios.get(apiUrl);
+
+          const locationData = response.data;
+
+          const message = `
+      IP Address: ${encodedIpAddress}\n
+      Country: ${locationData.location.country}\n
+      Region: ${locationData.location.region}\n
+      Timezone: ${locationData.location.timezone}\n
+      City: ${locationData.location.city}\n
+      Latitude: ${locationData.location.ll[0]}\n
+      Longitude: ${locationData.location.ll[1]}\n
+    `;
+
+          A17.sendMessage(from, { text: message }, { quoted: m });
+        } catch (error) {
+          console.error('Error fetching IP location data:', error);
+          reply('Failed to fetch IP location data. Please try again later.');
+        }
+        break;
+
+
+      case 'serverip':
+      case 'ip':
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+
+        async function getServerIp() {
+          try {
+            const response = await axios.get('https://api.ipify.org?format=json');
+
+            const serverIp = response.data.ip;
+
+            return serverIp;
+          } catch (error) {
+
+            console.error('Error fetching server IP address:', error.message);
+            return null;
+          }
+        }
+
+        getServerIp()
+          .then(serverIp => {
+            if (serverIp) {
+              const message = `The bot's IP address is: ${serverIp}`;
+              A17.sendMessage(from, { text: message }, { quoted: m });
+            } else {
+              A17.sendMessage(from, { text: 'Failed to fetch server IP address.' }, { quoted: m });
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error.message);
+            A17.sendMessage(from, { text: 'An error occurred while fetching the server IP address.' }, { quoted: m });
+          });
+        break;
+
+        case 'restart':
+        await A17.sendMessage(from, { react: { text: "⚙", key: m.key } });
+        if (!isCreator) return reply(mess.botowner)
+
+        await A17.sendMessage(from, { text: mess.waiting });
+        await A17.sendMessage(from, { react: { text: "✅", key: m.key } });
+        await A17.sendMessage(from, { text: 'Restarting Success!' });
+
+        // Delay the shutdown by 5 seconds using sleep function
+        //await sleep(5000);
+
+        // Use PM2 to restart the script
+        pm2.restart('index', (err) => {
+          if (err) {
+            A17.sendMessage(from, { react: { text: "❌", key: m.key } });
+            A17.sendMessage(from, { text: 'Restarting Failed!' });
+          } else {
+            return;
+          }
+        });
+        break;
+
+
+
+      case 'ls':
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+        A17.sendMessage(from, { react: { text: "📂", key: m.key } });
+
+        const currentDir = process.cwd(); // Get the current working directory
+
+        try {
+          const files = fs.readdirSync(currentDir);
+          let folderName = `Files in ${currentDir}:\n\n`;
+          let fileList = files.join('\n'); // Join the file names with a newline
+          A17.sendMessage(from, { text: folderName + fileList }, m);
+        } catch (error) {
+          console.error(error);
+          A17.sendMessage(from, { text: 'Error reading directory contents.🫳🏻' }, m);
+        }
+        break;
 
 
       case 'autostatus':
@@ -1203,9 +1139,66 @@ Typed *surrender* to surrender and admited defeat`
         break;
 
 
+      //
+
+      case 'dice': case 'roll': {
+        A17.sendMessage(from, { react: { text: "🎲", key: m.key } })
+        const result = Math.floor(Math.random() * 6) + 1; // Generate a random number between 1 and 6
+
+        const diceMessage = `🎲 *Dice Roll Result:* ${result}`;
+
+        reply(diceMessage);
+      }
+        break;
+
+
+      case 'flipcoin': case 'coin': {
+        A17.sendMessage(from, { react: { text: "🪙", key: m.key } });
+        // Simulate flipping a coin (0 for heads, 1 for tails)
+        const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
+
+        const flipCoinMessage = `🪙 *Coin Flip Result: ${result}*`;
+        reply(flipCoinMessage);
+      }
+        break;
+
+
+      case 'rps': {
+        const randomEmoji = manyemojis[Math.floor(Math.random() * manyemojis.length)];
+        A17.sendMessage(from, { react: { text: randomEmoji, key: m.key } });
+
+        // Check if the command includes a valid move (rock, paper, or scissors)
+        const validMoves = ['rock', 'paper', 'scissors'];
+        if (!args[0] || !validMoves.includes(args[0].toLowerCase())) {
+          return reply('Please provide a valid move: rock, paper, or scissors.');
+        }
+
+        // Generate a random move for the bot
+        const botMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+
+        // Determine the winner
+        const userMove = args[0].toLowerCase();
+        let result;
+
+        if (userMove === botMove) {
+          result = 'It\'s a tie!';
+        } else if (
+          (userMove === 'rock' && botMove === 'scissors') ||
+          (userMove === 'paper' && botMove === 'rock') ||
+          (userMove === 'scissors' && botMove === 'paper')
+        ) {
+          result = `You win! 🥳 ${userMove} beats ${botMove}.`;
+        } else {
+          result = `You lose! 🫳🏻 ${botMove} beats ${userMove}.`;
+        }
+
+        // Send the result as a response
+        reply(`You chose ${userMove}.\nA17 chose ${botMove}.\n${result}`);
+      }
+        break;
+
 
       // economy ...
-
       case 'daily': case 'claim': case 'reward':
 
         {
@@ -1224,6 +1217,7 @@ Typed *surrender* to surrender and admited defeat`
           reply(`You claimed 💎${daily.amount} for daily`);
         }
         break;
+
 
       case 'wallet': case 'purse': {
 
@@ -1244,7 +1238,6 @@ Typed *surrender* to surrender and admited defeat`
         await reply(`👛 ${pushname}'s Purse:\n\n_💎${balance.wallet}_`);
 
       }
-
         break;
 
 
@@ -1425,11 +1418,11 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      /* ████ ✪ ███▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ [ GAMBLE ] ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███ ✪ ███ */
+      //-------------------------------------------------------------------------------------------------------------------------------------//
 
 
 
-      //
+      //gamble
       case 'gamble': case 'lottery':
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
@@ -1621,7 +1614,7 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      /////////////////////////////////////////////////////////////////////////////////////////////////
+      //----------------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -1854,34 +1847,6 @@ Typed *surrender* to surrender and admited defeat`
         break;
 
 
-      case 'quotesimagexxx': case 'qoutesimagexxx': case 'quoteimage':
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        let cok = await fetchJson(`http://api.lolhuman.xyz/api/random/quotesimage?apikey=${lolkey}`)
-        reply(mess.waiting)
-        A17.sendMessage(m.chat, { image: { url: cok }, caption: 'Here it is...' }, { quoted: m })
-        break;
-
-
-      case 'quotesanime': case 'quoteanime': case 'animequote': case 'animequotes': {
-        let { quotesAnime } = require('./lib/scraper')
-        let anu = await quotesAnime()
-        hasil = anu[Math.floor(Math.random() * anu.length)]
-        /*     let buttons = [
-                 {buttonId: `${prefix}quotesanime`, buttonText: {displayText: '>>'}, type: 1}
-             ]  */
-        let buttonMessage = {
-          text: `_${hasil.quotes}_\n\nBy '${hasil.karakter}', ${hasil.anime}\n\n- ${hasil.up_at}`,
-          /*     footer: 'A17',
-               buttons: buttons,
-               headerType: 2  */
-        }
-        A17.sendMessage(m.chat, buttonMessage, { quoted: m })
-      }
-        break;
-
-
-
       case 'animestory': {
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
@@ -1917,71 +1882,52 @@ Typed *surrender* to surrender and admited defeat`
       }
         break;
 
-      case 'chatgpt':
-      case 'ai':
-      case 'gpt': {
+
+      case 'chat':
+      case 'gpt':
+      case 'chatbot':
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
 
-        const randomEmoji = manyemojis[Math.floor(Math.random() * manyemojis.length)];
-        A17.sendMessage(from, { react: { text: randomEmoji, key: m.key } });
+        if (!args[0]) {
+          return reply(`Please provide a message to chat with the AI chatbot. Example: ${prefix}chat How are you?`);
+        }
 
-        if (!q) return reply(`Please provide a text query. Example: ${prefix + command} Hello, ChatGPT!`);
+        const message = encodeURIComponent(args.join(' '));
+        const gptapi = `https://api.maher-zubair.tech/ai/chatgpt3?q=${message}`;
 
         try {
-          const apiUrl1 = `https://vihangayt.me/tools/chatgpt2?q=${encodeURIComponent(q)}`;
-
-          const response1 = await fetch(apiUrl1);
-          const responseData1 = await response1.json();
-
-          let message = "";
-
-          if (response1.status === 200 && responseData1 && responseData1.status === true && responseData1.data) {
-            message = responseData1.data;
-          } else {
-            return reply("Sorry, I couldn't fetch a response from the API at the moment.");
-          }
-
-          const me = m.sender;
-          await A17.sendMessage(m.chat, { text: message, mentions: [me] }, { quoted: m });
-
+          const response = await axios.get(gptapi);
+          const result = response.data.result;
+          reply(result);
         } catch (error) {
-          console.error(error);
-          reply("An error occurred while fetching the response from the API.");
+          console.error('Error fetching AI chatbot response:', error);
+          reply('An error occurred while fetching the AI chatbot response. Please try again later.');
         }
-      }
         break;
+
 
 
       case 'dalle': case 'imgai': {
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
 
+        const randomEmoji = manyemojis[Math.floor(Math.random() * manyemojis.length)];
+        A17.sendMessage(from, { react: { text: randomEmoji, key: m.key } });
+
         if (!q) return reply(`Please provide a query to generate an image. Example: ${prefix + command} Beautiful landscape`);
 
-        const apiUrl = `https://gurugpt.cyclic.app/dalle?prompt=${encodeURIComponent(q)}&model=art`;
-        //api source has ratelimit so may generate invalid results sometimes
+        const apiUrl = `https://gurugpt.cyclic.app/dalle?prompt=${encodeURIComponent(q)}`;
+
         try {
-
-          const response = await fetch(apiUrl);
-
-          if (response.status === 200) {
-
-            const imageUrls = await response.json();
-
-
-            const randomImageUrl = imageUrls.result[Math.floor(Math.random() * imageUrls.result.length)];
-
-            await A17.sendMessage(m.chat, { image: { url: randomImageUrl } }, { quoted: m });
-          } else {
-            reply("Sorry, I couldn't generate an image at the moment.");
-          }
+          await A17.sendMessage(m.chat, { image: { url: apiUrl } }, { quoted: m });
         } catch (error) {
           console.error(error);
           reply("An error occurred while generating the image.");
         }
       }
         break;
+
 
 
       case 'grupsetting':
@@ -2585,7 +2531,6 @@ Typed *surrender* to surrender and admited defeat`
         if (m.sender != '916297175943@s.whatsapp.net') { return; }
 
         if (isBanChat) return reply(mess.bangc);
-        if (m.isGroup) reply(mess.privateonly)
 
         A17.sendMessage(from, { react: { text: "🫡", key: m.key } })
 
@@ -2593,6 +2538,53 @@ Typed *surrender* to surrender and admited defeat`
           return "case" + `'${cases}'` + fs.readFileSync("Core.js").toString().split('case \'' + cases + '\'')[1].split("break;")[0] + "break;"
         }
         reply(`${getCase(q)}`)
+        break;
+
+
+      case 'addcase': {
+
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+
+
+        if (m.sender !== '916297175943@s.whatsapp.net') {
+          return reply('You are not authorized to use this command.');
+        }
+
+        if (args.length < 2) {
+          return reply('Invalid usage! Please provide the case name and its functionality.');
+        }
+
+        const caseName = args[0];
+        const functionality = args.slice(1).join(' ');
+
+        fs.readFile('./Core.js', 'utf8', (err, data) => {
+          if (err) {
+            console.error('Error reading Core.js:', err);
+            return reply('Failed to add case. Please try again later.');
+          }
+
+          const newCase = `
+          case '${caseName}': {
+            ${functionality}
+          }
+          break;
+          `;
+
+          const insertIndex = data.indexOf('switch (command) {') + 'switch (command) {'.length;
+
+          const newData = data.slice(0, insertIndex) + newCase + data.slice(insertIndex);
+
+          fs.writeFile('./Core.js', newData, 'utf8', (err) => {
+            if (err) {
+              console.error('Error writing to Core.js:', err);
+              reply('Failed to add case. Please try again later.');
+            } else {
+              reply('New case added successfully!');
+            }
+          });
+        });
+      }
         break;
 
 
@@ -2610,17 +2602,17 @@ Typed *surrender* to surrender and admited defeat`
         break;
 
 
-      /*
+
       case 'delete': case 'del': {
-       if (isBan) return reply(mess.banned);	 			
-      if (isBanChat) return reply(mess.bangc);
-      if (!m.quoted) return
-      let { chat, fromMe, id, isBaileys } = m.quoted
-      if (!isBaileys) return reply('How can i delete messages of other person? Baka!')
-      A17.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: true, id: m.quoted.id, participant: m.quoted.sender } })
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+        if (!m.quoted) return
+        let { chat, fromMe, id, isBaileys } = m.quoted
+        if (!isBaileys) return reply('How can i delete messages of other person? Baka!')
+        A17.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: true, id: m.quoted.id, participant: m.quoted.sender } })
       }
-      break;
-      */
+        break;
+
 
 
       case 'deleteall': case 'delall': case 'delete': case 'del': {
@@ -2646,8 +2638,7 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      //////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -2686,6 +2677,45 @@ Typed *surrender* to surrender and admited defeat`
       // 🔗 Url Github : ${gitdata.url}
       // 🔄 Updated At : ${gitdata.updated_at}
       // 🧩 Created At : ${gitdata.ceated_at}
+
+
+      case 'git':
+      case 'gitclone':
+      case 'git-clone':
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+
+        A17.sendMessage(from, { react: { text: "💫", key: m.key } });
+
+        if (!args[0]) {
+          return reply(`Please provide the GitHub repository link.\nExample:\n${prefix}${command} https://github.com/Kai0071/A17`);
+        }
+
+        if (!isUrl(args[0]) || !args[0].includes('github.com')) {
+          return reply(`Invalid or non-GitHub repository link provided. Please use a valid GitHub repository link.`);
+        }
+
+        try {
+          let splitURL = args[0].split('github.com/');
+          if (splitURL.length < 2) throw Error('Invalid GitHub URL');
+
+          let [githubUser, githubRepo] = splitURL[1].split('/');
+          githubRepo = githubRepo.replace('.git', '');
+
+          let gitZipUrl = `https://api.github.com/repos/${githubUser}/${githubRepo}/zipball`;
+
+          await A17.sendMessage(from, { text: `${pushname}, Please wait, downloading...` });
+
+
+          let zipHeaders = await fetch(gitZipUrl, { method: 'HEAD' }).then(res => res.headers);
+          let zipFilename = zipHeaders.get('content-disposition').match(/attachment; filename=(.*)/)[1];
+
+          await A17.sendMessage(m.chat, { document: { url: gitZipUrl }, fileName: zipFilename + '.zip', mimetype: 'application/zip' }, { quoted: m });
+        } catch (err) {
+          console.error(err);
+          return reply(`Failed to fetch the repository contents. Please ensure the GitHub link is correct and accessible. Use the format: 'https://github.com/username/repository'.`);
+        }
+        break;
 
 
       case 'listpc': {
@@ -2773,9 +2803,7 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      ////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////
-
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
       case 'afk': {
@@ -2837,10 +2865,7 @@ Typed *surrender* to surrender and admited defeat`
         break;
 
 
-      ////////////////////////////////////////////////////////////////////////////
-
-
-      /* ████ ✪ ███▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ [ Antilink ] ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███ ✪ ███ */
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
       //
@@ -3207,8 +3232,7 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -3577,19 +3601,8 @@ Typed *surrender* to surrender and admited defeat`
         let response = await A17.groupInviteCode(m.chat)
         A17.sendMessage(m.chat, {
           text: `*Group Name:* *${groupMetadata.subject}* \n\n*Group Link :* \nhttps://chat.whatsapp.com/${response}l`, "contextInfo": {
-            mimetype: "image/jpeg",
-            text: `${global.OwnerName}`,
             "forwardingScore": 1000000000,
             isForwarded: true,
-            sendEphemeral: true,
-            "externalAdreply": {
-              "title": `${global.BotName}`,
-              "body": `${global.WaterMark}`,
-              "previewType": "PHOTO",
-              "thumbnailUrl": Thumb,
-              "thumbnail": Thumb,
-              "sourceUrl": `${global.websitex}`
-            }
           }
         }, { quoted: m, detectLink: true })
       }
@@ -3752,16 +3765,74 @@ Typed *surrender* to surrender and admited defeat`
         break;
 
 
-      // case 'leavegc': case 'leavegroup': case 'bye': {
-      //   if (isBan) return reply(mess.banned);	 			
-      //   if (isBanChat) return reply(mess.bangc);
-      //   if (!m.isGroup) return reply(mess.grouponly);
-      //       reply(mess.waiting)
-      //                   if (!isCreator) return reply(`${mess.botowner}`)
-      //                   A17.sendMessage(from, { react: { text: "☯️" , key: m.key }})
-      //                   await A17.groupLeave(m.chat).then((res) => reply(jsonformat(res))).catch((err) => reply(jsonformat(err)))
-      //               }
-      //               break;
+      case 'left': case 'leftgc': case 'left-gc': {
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+        if (!m.isGroup) return reply(mess.grouponly);
+        if (!isAdmins && !isCreator) return reply(mess.useradmin);
+
+        let msg = generateWAMessageFromContent(m.chat, {
+          viewOnceMessage: {
+            message: {
+              "messageContextInfo": {
+                "deviceListMetadata": {},
+                "deviceListMetadataVersion": 2
+              },
+              interactiveMessage: proto.Message.InteractiveMessage.create({
+                body: proto.Message.InteractiveMessage.Body.create({
+                  text: null
+                }),
+                footer: proto.Message.InteractiveMessage.Footer.create({
+                  text: '            Powered by A17 2024'
+                }),
+                header: proto.Message.InteractiveMessage.Header.create({
+                  ...(await prepareWAMessageMedia({ image: { url: 'https://graph.org/file/4ca10c7029fcaee1003f7.jpg' } }, { upload: A17.waUploadToServer })),
+
+                  title: '        Leave Group Confirmation',
+                  subtitle: null,
+                  hasMediaAttachment: false
+                }),
+                nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                  buttons: [
+                    {
+                      "name": "quick_reply",
+                      "buttonParamsJson": `{"display_text":"Yes","id":"${prefix}bye"}`
+                    },
+                    {
+                      "name": "quick_reply",
+                      "buttonParamsJson": `{"display_text":"No","id":"ok"}`
+                    }
+                  ],
+                })
+              })
+            }
+          }
+        }, {});
+
+        await A17.relayMessage(msg.key.remoteJid, msg.message, {
+          messageId: msg.key.id
+        }).catch(err => {
+          console.error('Error relaying message:', err);
+          return reply('Error relaying message.');
+        });
+
+        break;
+      }
+
+      case 'bye': {
+
+        if (!isAdmins && !isCreator) return reply(mess.useradmin);
+
+        await sleep(1500);
+
+        await A17.sendMessage(m.chat, { text: args.join(" ") ? args.join(" ") : `Okee ${global.OwnerName} Leaving the group...`, mentions: participants.map(a => a.id) });
+
+        // Leave the group
+        A17.sendMessage(from, { react: { text: "☯️", key: m.key } });
+        await A17.groupLeave(m.chat).then((res) => reply(jsonformat(res))).catch((err) => reply(jsonformat(err)));
+
+        break;
+      }
 
 
       //
@@ -3992,8 +4063,7 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      //////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //---------------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -4145,135 +4215,7 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      ///////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-      //
-      /*
-      // text editor
-      candy  christmas  3dchristmas  sparklechristmas
-       deepsea  scifi  rainbow  waterpipe  spooky 
-       pencil  circuit  discovery  metalic  fiction  demon 
-       transformer  berry  thunder  magma  3dstone 
-       neonlight  glitch  harrypotter  brokenglass  papercut 
-       watercolor  multicolor  neondevil  underwater  graffitibike
-       snow  cloud  honey  ice  fruitjuice  biscuit  wood 
-       chocolate  strawberry  matrix  blood  dropwater  toxic 
-       lava  rock  bloodglas  hallowen  darkgold  joker  wicker
-       firework  skeleton  blackpink  sand  glue  1917  leaves
-      
-      */
-
-
-      /* ████ ✪ ███▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ [ Text Effects ] ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███ ✪ ███ */
-
-
-
-      case 'candy': case 'christmas': case '3dchristmas': case 'sparklechristmas':
-      case 'deepsea': case 'scifi': case 'rainbow': case 'waterpipe': case 'spooky':
-      case 'pencil': case 'circuit': case 'discovery': case 'metalic': case 'fiction': case 'demon':
-      case 'transformer': case 'berry': case 'thunder': case 'magma': case '3dstone':
-      case 'neonlight': case 'glitch': case 'harrypotter': case 'brokenglass': case 'papercut':
-      case 'watercolor': case 'multicolor': case 'neondevil': case 'underwater': case 'graffitibike':
-      case 'snow': case 'cloud': case 'honey': case 'ice': case 'fruitjuice': case 'biscuit': case 'wood':
-      case 'chocolate': case 'strawberry': case 'matrix': case 'blood': case 'dropwater': case 'toxic':
-      case 'lava': case 'rock': case 'bloodglas': case 'hallowen': case 'darkgold': case 'joker': case 'wicker':
-      case 'firework': case 'skeleton': case 'blackpink': case 'sand': case 'glue': case '1917': case 'leaves': {
-
-        if (!q) return reply(`Example : ${prefix + command} ${global.OwnerName}`)
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        A17.sendMessage(from, { react: { text: "🪄", key: m.key } })
-        reply(mess.waiting)
-
-        let link
-        if (/candy/.test(command)) link = 'https://textpro.me/create-christmas-candy-cane-text-effect-1056.html'
-        if (/christmas/.test(command)) link = 'https://textpro.me/christmas-tree-text-effect-online-free-1057.html'
-        if (/3dchristmas/.test(command)) link = 'https://textpro.me/3d-christmas-text-effect-by-name-1055.html'
-        if (/sparklechristmas/.test(command)) link = 'https://textpro.me/sparkles-merry-christmas-text-effect-1054.html'
-        if (/deepsea/.test(command)) link = 'https://textpro.me/create-3d-deep-sea-metal-text-effect-online-1053.html'
-        if (/scifi/.test(command)) link = 'https://textpro.me/create-3d-sci-fi-text-effect-online-1050.html'
-        if (/rainbow/.test(command)) link = 'https://textpro.me/3d-rainbow-color-calligraphy-text-effect-1049.html'
-        if (/waterpipe/.test(command)) link = 'https://textpro.me/create-3d-water-pipe-text-effects-online-1048.html'
-        if (/spooky/.test(command)) link = 'https://textpro.me/create-halloween-skeleton-text-effect-online-1047.html'
-        if (/pencil/.test(command)) link = 'https://textpro.me/create-a-sketch-text-effect-online-1044.html'
-        if (/circuit/.test(command)) link = 'https://textpro.me/create-blue-circuit-style-text-effect-online-1043.html'
-        if (/discovery/.test(command)) link = 'https://textpro.me/create-space-text-effects-online-free-1042.html'
-        if (/metalic/.test(command)) link = 'https://textpro.me/creat-glossy-metalic-text-effect-free-online-1040.html'
-        if (/fiction/.test(command)) link = 'https://textpro.me/create-science-fiction-text-effect-online-free-1038.html'
-        if (/demon/.test(command)) link = 'https://textpro.me/create-green-horror-style-text-effect-online-1036.html'
-        if (/transformer/.test(command)) link = 'https://textpro.me/create-a-transformer-text-effect-online-1035.html'
-        if (/berry/.test(command)) link = 'https://textpro.me/create-berry-text-effect-online-free-1033.html'
-        if (/thunder/.test(command)) link = 'https://textpro.me/online-thunder-text-effect-generator-1031.html'
-        if (/magma/.test(command)) link = 'https://textpro.me/create-a-magma-hot-text-effect-online-1030.html'
-        if (/3dstone/.test(command)) link = 'https://textpro.me/3d-stone-cracked-cool-text-effect-1029.html'
-        if (/neonlight/.test(command)) link = 'https://textpro.me/create-3d-neon-light-text-effect-online-1028.html'
-        if (/glitch/.test(command)) link = 'https://textpro.me/create-impressive-glitch-text-effects-online-1027.html'
-        if (/harrypotter/.test(command)) link = 'https://textpro.me/create-harry-potter-text-effect-online-1025.html'
-        if (/brokenglass/.test(command)) link = 'https://textpro.me/broken-glass-text-effect-free-online-1023.html'
-        if (/papercut/.test(command)) link = 'https://textpro.me/create-art-paper-cut-text-effect-online-1022.html'
-        if (/watercolor/.test(command)) link = 'https://textpro.me/create-a-free-online-watercolor-text-effect-1017.html'
-        if (/multicolor/.test(command)) link = 'https://textpro.me/online-multicolor-3d-paper-cut-text-effect-1016.html'
-        if (/neondevil/.test(command)) link = 'https://textpro.me/create-neon-devil-wings-text-effect-online-free-1014.html'
-        if (/underwater/.test(command)) link = 'https://textpro.me/3d-underwater-text-effect-generator-online-1013.html'
-        if (/graffitibike/.test(command)) link = 'https://textpro.me/create-wonderful-graffiti-art-text-effect-1011.html'
-        if (/snow/.test(command)) link = 'https://textpro.me/create-snow-text-effects-for-winter-holidays-1005.html'
-        if (/cloud/.test(command)) link = 'https://textpro.me/create-a-cloud-text-effect-on-the-sky-online-1004.html'
-        if (/honey/.test(command)) link = 'https://textpro.me/honey-text-effect-868.html'
-        if (/ice/.test(command)) link = 'https://textpro.me/ice-cold-text-effect-862.html'
-        if (/fruitjuice/.test(command)) link = 'https://textpro.me/fruit-juice-text-effect-861.html'
-        if (/biscuit/.test(command)) link = 'https://textpro.me/biscuit-text-effect-858.html'
-        if (/wood/.test(command)) link = 'https://textpro.me/wood-text-effect-856.html'
-        if (/chocolate/.test(command)) link = 'https://textpro.me/chocolate-cake-text-effect-890.html'
-        if (/strawberry/.test(command)) link = 'https://textpro.me/strawberry-text-effect-online-889.html'
-        if (/matrix/.test(command)) link = 'https://textpro.me/matrix-style-text-effect-online-884.html'
-        if (/blood/.test(command)) link = 'https://textpro.me/horror-blood-text-effect-online-883.html'
-        if (/dropwater/.test(command)) link = 'https://textpro.me/dropwater-text-effect-872.html'
-        if (/toxic/.test(command)) link = 'https://textpro.me/toxic-text-effect-online-901.html'
-        if (/lava/.test(command)) link = 'https://textpro.me/lava-text-effect-online-914.html'
-        if (/rock/.test(command)) link = 'https://textpro.me/rock-text-effect-online-915.html'
-        if (/bloodglas/.test(command)) link = 'https://textpro.me/blood-text-on-the-frosted-glass-941.html'
-        if (/hallowen/.test(command)) link = 'https://textpro.me/halloween-fire-text-effect-940.html'
-        if (/darkgold/.test(command)) link = 'https://textpro.me/metal-dark-gold-text-effect-online-939.html'
-        if (/joker/.test(command)) link = 'https://textpro.me/create-logo-joker-online-934.html'
-        if (/wicker/.test(command)) link = 'https://textpro.me/wicker-text-effect-online-932.html'
-        if (/firework/.test(command)) link = 'https://textpro.me/firework-sparkle-text-effect-930.html'
-        if (/skeleton/.test(command)) link = 'https://textpro.me/skeleton-text-effect-online-929.html'
-        if (/blackpink/.test(command)) link = 'https://textpro.me/create-blackpink-logo-style-online-1001.html'
-        if (/sand/.test(command)) link = 'https://textpro.me/write-in-sand-summer-beach-free-online-991.html'
-        if (/glue/.test(command)) link = 'https://textpro.me/create-3d-glue-text-effect-with-realistic-style-986.html'
-        if (/1917/.test(command)) link = 'https://textpro.me/1917-style-text-effect-online-980.html'
-        if (/leaves/.test(command)) link = 'https://textpro.me/natural-leaves-text-effect-931.html'
-        let anu = await maker.textpro(link, q)
-        A17.sendMessage(m.chat, { image: { url: anu }, caption: `Made by A17 Bot By Kai...  🪄` }, { quoted: m })
-      }
-
-        break;
-
-
-      case 'pornhub': case 'phub': {
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        A17.sendMessage(from, { react: { text: "🪄", key: m.key } })
-        if (!q) return reply(`Example: ${prefix + command} Oh|No`)
-        reply(mess.waiting)
-
-        inilogo4 = args.join(" ")
-        inilogo9 = args.join(" ")
-        var logo4 = inilogo4.split('|')[0]
-        var logo9 = inilogo9.split('|')[1]
-        let anu = await textpro("https://textpro.me/pornhub-style-logo-online-generator-free-977.html", [`${logo4}`, `${logo9}`])
-        console.log(anu)
-        A17.sendMessage(from, { image: { url: anu }, caption: "Here you go!" }, { quoted: m })
-      }
-        break;
-
-
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //-------------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -4343,6 +4285,8 @@ Typed *surrender* to surrender and admited defeat`
       //   });
       // }
       // break;
+
+
       case 'gimage':
       case 'gig':
       case 'googleimage': {
@@ -4374,11 +4318,6 @@ Typed *surrender* to surrender and admited defeat`
         });
       }
         break;
-
-
-
-
-
 
 
       // case "gig":
@@ -4419,7 +4358,9 @@ Typed *surrender* to surrender and admited defeat`
 
 
 
-      //---------------------------------------- NASA  -----------------------------------------//
+      //-------------------------------------------------------------------------------------------------------------------------------------//
+
+
 
       case 'apod': {
         if (isBan) return reply(mess.banned);
@@ -4512,6 +4453,59 @@ Typed *surrender* to surrender and admited defeat`
         A17.sendMessage(from, { image: { url: res2[0].thumb }, caption: result2 })
         break;
 
+
+      case 'urban': {
+        A17.sendMessage(from, { react: { text: "📖", key: m.key } })
+        // Extract the word from the message
+        const word = text.trim();
+
+        if (!word) {
+          reply(`Please provide a word to look up on Urban Dictionary. Example: ${prefix}urban hello`);
+          return;
+        }
+
+        // Make a request to the Urban Dictionary API
+        const apiUrl = `https://api.urbandictionary.com/v0/define?term=${encodeURIComponent(word)}`;
+
+        try {
+          const response = await axios.get(apiUrl);
+
+          // Extract the first definition from the API response
+          const definition = response.data.list[0]?.definition;
+
+          if (definition) {
+            const urbanMessage = `📖 *Urban Dictionary Definition for "${word}":*\n\n${definition}`;
+            reply(urbanMessage);
+          } else {
+            reply(`No Urban Dictionary definition found for "${word}".`);
+          }
+        } catch (error) {
+          console.error('Error fetching Urban Dictionary definition:', error.message);
+          reply('An error occurred while fetching the Urban Dictionary definition. Please try again later.');
+        }
+      }
+        break;
+
+
+      case 'aju': case 'campus': case 'imgaju':
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+        if (!m.isGroup) return reply(mess.grouponly);
+        A17.sendMessage(from, { react: { text: "✨", key: m.key } })
+
+        const aju = {
+          image: { url: 'https://campus-pictures.onrender.com/' },
+          caption: `${pushname} here you go...`,
+
+        }
+
+        await A17.sendMessage(m.chat, aju, { quoted: m }).catch(err => {
+          return ('Error!')
+        })
+
+        break;
+
+
       case 'earthquake':
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
@@ -4537,32 +4531,8 @@ Typed *surrender* to surrender and admited defeat`
         break;
 
 
-      // const { getBuffer } = require("./lib/myfunc");
 
-      // case 'ss':
-      //   async (A17, m, { pushName, prefix, args, text }) => {
-      //     if (!args[0]) return m.reply(`Please provide me a link to lookup!`);
-
-      //     let lookupURL;
-      //     if (!args[0].includes("http")) {
-      //       lookupURL = `https://${args[0]}`;
-      //     } else {
-      //       lookupURL = args[0];
-      //     }
-
-      //     try {
-      //       const resImage = await getBuffer(`https://api.popcat.xyz/screenshot?url=${lookupURL}`);
-      //       await A17.sendMessage(m.from, { image: resImage, caption: `_Here's how this URL looks like:_\n${args[0]}\n` }, { quoted: m });
-      //     } catch (error) {
-      //       m.reply(`An error occurred while processing your request!\n\nPlease recheck your link and try again!`);
-      //     }
-      //   };
-      //   break;
-
-
-
-      ///////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
       //
@@ -4669,8 +4639,8 @@ Typed *surrender* to surrender and admited defeat`
                 body: `${global.OwnerName}`,
                 thumbnail: BotLogo,
                 mediaType: 2,
-                mediaUrl: `${global.websitex}`,
-                sourceUrl: `${global.websitex}`
+                mediaUrl: `${global.website}`,
+                sourceUrl: `${global.website}`
               }
             }
           }, { quoted: m })
@@ -5035,6 +5005,10 @@ _Click the button below to download_`
       // break;
 
 
+
+      //-----------------------------------------------------------------------------------------------------------------------------------//
+
+
       case 'play':
       case 'song':
       case 'music': {
@@ -5050,7 +5024,6 @@ _Click the button below to download_`
         let anu = search.videos[0];
         const ytmp3play = await YT.mp3(anu.url);
 
-        // Fetch the thumbnail URL from the 'anu' object
         let thumbnailUrl = anu.thumbnail;
 
         await A17.sendMessage(
@@ -5073,7 +5046,6 @@ _Click the button below to download_`
           { quoted: m }
         );
 
-        // Send the audio file with the proper 'type' property set to 'audio'
         await A17.sendMessage(from, {
           audio: fs.readFileSync(ytmp3play.path),
           filename: anu.title + '.mp3',
@@ -5081,8 +5053,41 @@ _Click the button below to download_`
           quoted: m,
         });
 
-        // Rest of the code remains unchanged.
-        // ...
+      }
+        break;
+
+      case 'spotify': {
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+        A17.sendMessage(from, { react: { text: "🍁", key: m.key } });
+
+        if (!q) return reply(`Please provide a query. Example: ${prefix + command} 295`);
+
+        let abuffer = `https://www.guruapi.tech/api/spotifydl?url=${encodeURIComponent(q)}`
+        let bbuffer = await fetchJson(`https://www.guruapi.tech/api/spotifyinfo?text=${encodeURIComponent(q)}`)
+
+        let bimg = bbuffer.spty.results.thumbnail
+        let bname = bbuffer.spty.results.title
+        let burl = bbuffer.spty.results.url;
+
+        await A17.sendMessage(from, {
+          audio: { url: abuffer },
+          ptt: true,
+          filename: 'error.mp3',
+          mimetype: 'audio/mpeg',
+          contextInfo: {
+            mentionedJid: [m.sender],
+            externalAdReply: {
+              title: "↺ |◁   II   ▷|   ♡",
+              body: `Now playing: ${bname}`,
+              thumbnailUrl: bimg,
+              sourceUrl: burl,
+              mediaType: 1,
+              renderLargerThumbnail: true
+            }
+          }
+        }, { quoted: m }
+        );
       }
         break;
 
@@ -5100,6 +5105,9 @@ _Click the button below to download_`
       }
 
         break;
+
+
+
 
 
       /*
@@ -5164,30 +5172,41 @@ _Click the button below to download_`
         break;
 
 
-      case 'lyrics': {
+      case 'lyrics':
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
         if (!m.isGroup) return reply(mess.grouponly);
-        A17.sendMessage(from, { react: { text: "🍁", key: m.key } })
-        if (!text) return reply(`Comand usage: ${prefix}lyrics Thunder`)
-        reply(mess.waiting)
-        const { lyrics, lyricsv2 } = require('@bochilteam/scraper')
-        const result = await lyricsv2(text).catch(async _ => await lyrics(text))
-        reply(`
-*Title :* ${result.title}
-*Author :* ${result.author}
-*Url :* ${result.link}
+        A17.sendMessage(from, { react: { text: "🍁", key: m.key } });
 
-*Lyrics :* ${result.lyrics}
+        if (!text) return reply(`Command usage: ${prefix}lyrics <song title>`);
 
-`.trim())
-      }
+        reply(mess.waiting);
+
+        const { getLyrics } = require("@fantox01/lyrics-scraper");
+
+        try {
+          const data = await getLyrics(text);
+
+          const message = `
+        *Title:* ${text}
+        *Artist:* ${data.artist}
+        *Album:* ${data.album}
+        *Release Date:* ${data.release_date}
+        
+        *Lyrics:*\n${data.lyrics}
+            `.trim();
+
+          A17.sendMessage(from, { text: message, quoted: m });
+        } catch (error) {
+          console.error('Error fetching lyrics:', error);
+          const errorMessage = 'Failed to fetch lyrics. Please try again later.';
+          A17.sendMessage(from, { text: errorMessage, quoted: m });
+        }
         break;
 
 
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -5215,7 +5234,7 @@ _Click the button below to download_`
         A17.sendMessage(from, { react: { text: "🙀", key: m.key } });
         reply(mess.waiting);
 
-        let anu = await fetchJson('https://raw.githubusercontent.com/iamriz7/kopel_/main/kopel.json');
+        let anu = await fetchJson('https://www.exenoz.tech/couple');
 
         for (let i = 0; i < 3; i++) {  // the set of picures.
           let random = anu[Math.floor(Math.random() * anu.length)];
@@ -5280,48 +5299,7 @@ _Click the button below to download_`
       // break;
 
 
-
-      ////// Hehe ////// 
-
-      // case 'pinterest': case'pin' : {
-      //   if (isBan) return reply(mess.banned);
-      //   if (isBanChat) return reply(mess.bangc);
-      //   if (!args.join(" ")) return reply(`${pushname} Pls provide a search term!`)
-      // let { pinterest } = require('./lib/scraper')
-      // anutrest = await pinterest(text)
-      // result = anutrest[Math.floor(Math.random() * anutrest.length)]
-      // A17.sendMessage(m.chat, { image: { url: result }, caption: '⭔ Media Url : '+result }, { quoted: m })
-      // }
-      // break;
-
-
-      //
-      case 'pinterest':
-      case 'pin': {
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        A17.sendMessage(from, { react: { text: "🐦", key: m.key } });
-
-        if (!args.join(" ")) return reply(`${pushname} Please provide a search term!`);
-        reply(mess.waiting)
-        let { pinterest } = require('./lib/scraper');
-        let anutrest = await pinterest(text);
-        let results = [];
-
-        // Get multiple random images (let's say 5 images)
-        const numImages = 5;
-        for (let i = 0; i < numImages && i < anutrest.length; i++) {
-          results.push(anutrest[Math.floor(Math.random() * anutrest.length)]);
-        }
-
-        // Send each image without any caption
-        for (let i = 0; i < results.length; i++) {
-          A17.sendMessage(m.chat, { image: { url: results[i] } }, { quoted: m });
-        }
-      }
-        break;
-
-
+      // //
       // case 'pinterest':
       // case 'pin': {
       //   if (isBan) return reply(mess.banned);
@@ -5329,7 +5307,7 @@ _Click the button below to download_`
       //   A17.sendMessage(from, { react: { text: "🐦", key: m.key } });
 
       //   if (!args.join(" ")) return reply(`${pushname} Please provide a search term!`);
-      //   reply(mess.waiting);
+      //   reply(mess.waiting)
       //   let { pinterest } = require('./lib/scraper');
       //   let anutrest = await pinterest(text);
       //   let results = [];
@@ -5340,18 +5318,46 @@ _Click the button below to download_`
       //     results.push(anutrest[Math.floor(Math.random() * anutrest.length)]);
       //   }
 
-      //   // Send each image with a common caption
-      //   const commonCaption = 'Check out this image from Pinterest By A17';
+      //   // Send each image without any caption
       //   for (let i = 0; i < results.length; i++) {
-      //     A17.sendMessage(m.chat, { image: { url: results[i] }, caption: commonCaption }, { quoted: m });
+      //     A17.sendMessage(m.chat, { image: { url: results[i] } }, { quoted: m });
       //   }
       // }
-      // break;
+      //   break;
+
+
+      case 'pinterest':
+      case 'pin': {
+        if (isBan) return reply(mess.banned);
+        if (isBanChat) return reply(mess.bangc);
+        A17.sendMessage(from, { react: { text: "🐦", key: m.key } });
+
+        const searchTerm = args.join(" ");
+        if (!searchTerm) return reply(`${pushname} Please provide a search term!`);
+        reply(mess.waiting);
+
+        const url = `https://www.exenoz.tech/api/pinterest?q=${encodeURIComponent(searchTerm)}`;
+
+        try {
+          const response = await axios.get(url);
+          const pins = response.data;
+
+          const numImages = 5;
+          const randomPins = pins.sort(() => 0.5 - Math.random()).slice(0, numImages);
+
+          randomPins.forEach(pin => {
+            A17.sendMessage(m.chat, { image: { url: pin.url } }, { quoted: m });
+          });
+        } catch (error) {
+          console.error('Error fetching data from Pinterest API:', error);
+          reply('Error fetching data from Pinterest API. Please try again later.');
+        }
+      }
+        break;
 
 
 
-      /////////////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -5424,8 +5430,7 @@ _Click the button below to download_`
 
 
 
-      ///////////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -5636,6 +5641,8 @@ _Click the button below to download_`
         break;
 
 
+
+
       case 'truth':
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
@@ -5743,32 +5750,6 @@ _Click the button below to download_`
       /* ████ ✪ ███▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ [ NSFW ] ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███ ✪ ███ */
 
 
-
-      case 'nsfwA17':
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        reply(mess.wait)
-        nye = `http://api.lolhuman.xyz/api/gimage?apikey=${lolkey}&query=${command}`
-        A17.sendMessage(from, { image: { url: nye }, caption: "Master..." }, { quoted: m })
-        break;
-
-      case 'mediafire': case 'mediafiredl': {
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        if (!text) return reply(mess.linkm)
-        if (!isUrl(args[0]) && !args[0].includes('mediafire.com')) return reply(`The link you provided is invalid`)
-        const baby1 = await mediafireDl(text)
-        if (baby1[0].size.split('MB')[0] >= 999) return reply('*File Over Limit* ' + util.format(baby1))
-        const result4 = `「  *Mediafire Downloader*  」
-      
-*Name* : ${baby1[0].nama}
-*Size* : ${baby1[0].size}
-*Mime* : ${baby1[0].mime}
-*Link* : ${baby1[0].link}`
-        reply(`${result4}`)
-        A17.sendMessage(m.chat, { document: { url: baby1[0].link }, fileName: baby1[0].nama, mimetype: baby1[0].mime }, { quoted: m }).catch((err) => reply(mess.error))
-      }
-        break;
 
 
       // case 'masturbation': case 'jahy': case 'hentai': case 'glasses': case 'gangbang': case 'foot': 
@@ -5931,9 +5912,7 @@ _Click the button below to download_`
       // /* ████ ✪ ███▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ [ Anime Mode ] ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███ ✪ ███ */
 
 
-      ///////////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
       //
@@ -6100,8 +6079,7 @@ _Click the button below to download_`
 
 
 
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -6625,33 +6603,7 @@ _Click the button below to download_`
         break;
 
 
-      case "quotes":
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        if (!m.isGroup) return reply(mess.grouponly);
-        var res = await fetch('https://animechan.vercel.app/api/random')
-        teks = `\n*Anime:* ${res.anime}\n`
-        teks += `\n*Quotes:*\n`
-        teks += `${res.json}\n`
-
-        reply(teks)
-        break;
-
-
-      case "darkjoke":
-        if (isBan) return reply(mess.banned);
-        if (isBanChat) return reply(mess.bangc);
-        if (!m.isGroup) return reply(mess.grouponly);
-        var res = await Darkjokes()
-        teks = "\nDarkjokes"
-        A17.sendMessage(m.chat, { image: { url: res }, caption: teks }, { quoted: m })
-        break;
-
-
-
-      ////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////
-
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
       // case 'remove': {
@@ -6666,372 +6618,446 @@ _Click the button below to download_`
 
 
 
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
-      ///////////////////////////////////////////////////
 
 
-      case 'bc': case 'broadcast': case 'bcall': {
+      // case 'bc': case 'broadcast': case 'bcall': {
+      //   if (isBan) return reply(mess.banned);
+      //   if (isBanChat) return reply(mess.bangc);
+      //   if (!isCreator) return reply(mess.botowner)
+      //   if (!args.join(" ")) return reply(`Please enter some text to broadcast! \n\nExample : ${prefix + command} ${global.OwnerName}`)
+      //   let anu = await store.chats.all().map(v => v.id)
+      //   reply(`Send Broadcast To ${anu.length} Chat\nTime's up ${anu.length * 1.5} second`)
+      //   for (let yoi of anu) {
+      //     await sleep(1500)
+      //     let btn = [{
+      //       quickreplyButton: {
+      //         displayText: '💡 Menu 💡',
+      //         id: `${}menu`
+      //       }
+      //     }, {
+      //       quickreplyButton: {
+      //         displayText: 'Bot Owner',
+      //         id: '-owner'
+      //       }
+      //     }]
+      //     let txt = `「 *${global.OwnerName}'s Broadcast* 」\n\n${text}`
+      //     A17.send5ButImg(yoi, txt, `${global.BotName}`, BotLogo, btn, Thumb)
+      //   }
+      //   reply('Broadcast Sent !')
+      // }
+      //   break;
+
+
+
+      case 'bcgc':
+      case 'bcgroup': {
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
-        if (!isCreator) return reply(mess.botowner)
-        if (!args.join(" ")) return reply(`Please enter some text to broadcast! \n\nExample : ${prefix + command} ${global.OwnerName}`)
-        let anu = await store.chats.all().map(v => v.id)
-        reply(`Send Broadcast To ${anu.length} Chat\nTime's up ${anu.length * 1.5} second`)
-        for (let yoi of anu) {
+        if (!isCreator) return reply(mess.botowner);
+        if (!args.join(" ")) return reply(`Please enter some text to broadcast! \n\nExample : ${prefix + command} ${global.OwnerName}`);
+
+        let getGroups = await A17.groupFetchAllParticipating()
+        let groups = Object.entries(getGroups).slice(0).map(entry => entry[1])
+        let anu = groups.map(v => v.id)
+        reply(`Sending Broadcast To ${anu.length} Group Chat, End Time ${anu.length * 1.5} seconds`)
+        for (let i of anu) {
           await sleep(1500)
-          let btn = [{
-            quickreplyButton: {
-              displayText: '💡 Menu 💡',
-              id: '-menu'
+          let a = `${global.OwnerName}'s Broadcast\n\n` + '' + `Message: ${text}\n\n` + ''
+          A17.sendMessage(i, {
+            text: a,
+            contextInfo: {
+              externalAdReply: {
+                showAdAttribution: true,
+                title: BotName,
+                body: `Sent in ${i.length} Group`,
+                thumbnailUrl: 'https://r4.wallpaperflare.com/wallpaper/1003/376/845/makoto-shinkai-kimi-no-na-wa-wallpaper-0816ade8b0301c58302c014e48d2441a.jpg',
+                sourceUrl: global.website,
+                mediaType: 1,
+                renderLargerThumbnail: true
+              }
             }
-          }, {
-            quickreplyButton: {
-              displayText: 'Bot Owner',
-              id: '-owner'
-            }
-          }]
-          let txt = `「 *${global.OwnerName}'s Broadcast* 」\n\n${text}`
-          A17.send5ButImg(yoi, txt, `${global.BotName}`, BotLogo, btn, Thumb)
+          })
         }
-        reply('Broadcast Sent !')
+        reply(`Successful in sending Broadcast To ${anu.length} Group`)
       }
-        break;
+        break
 
 
-
-
-      case 'help': case 'h': case 'menu': case 'allmenu': case 'listmenu': {
+      case 'help':
+      case 'h':
+      case 'menu':
+      case 'allmenu':
+      case 'listmenu': {
         if (isBan) return reply(mess.banned);
         if (isBanChat) return reply(mess.bangc);
-        A17.sendMessage(from, { react: { text: "✨", key: m.key } })
-        const helpmenu = `Hemlo *${pushname}* Dear...!! ${nowtime} ,
-  
-Hemlo, I am "A17" a WhatsApp bot create and recode by Kai to do everything that is possible on WhatsApp based on WhatsApp Multi Device(MD) Support.
+
+        try {
+          await A17.sendMessage(from, { react: { text: "✨", key: m.key } });
 
 
-  ⌯    *Time* : ${kaitime}
-  ⌯    *Date* : ${kaidate}
+          const helpMenuText = `\nHello ${pushname} Dear...!! ${nowtime} ,
+          
+          
+             ⌯  Date : ${kaidate}
+          
+          
+            〢━ 〄 Bot Info 〄 ━〢
+          
+   ⌯  My prefix is :  ${prefix}
+   ⌯  Bot usr name : ${pushname} 
+   ⌯  Owner name : ${global.OwnerName} 
+   ⌯  Runtime : ${runtime(process.uptime())} 
+   ⌯  RAM: ${formatp(os.totalmem() - os.freemem())} / ${formatp(os.totalmem())}
+   ⌯  Total CPU Usage: ${totalCpuUsage}%
+   ⌯  Platform : Linux
+          
+          
+            〢━ 〄 Core 〄 ━〢
+          
+          
+            ⌯   ${prefix}repo
+            ⌯   ${prefix}script
+            ⌯   ${prefix}speak
+            ⌯   ${prefix}support
+            ⌯   ${prefix}stalk
+            ⌯   ${prefix}setprefix
+            ⌯   ${prefix}auto-status
+            ⌯   ${prefix}auto-typing
+            ⌯   ${prefix}auto-recoding
+          
+          
+      〢━ ⌬ Owner Only ⌬ ━〢
+          
+          
+            ⌯   ${prefix}join
+            ⌯   ${prefix}self
+            ⌯   ${prefix}public
+            ⌯   ${prefix}restart
+            ⌯   ${prefix}sleep
+            ⌯   ${prefix}setbotpp
+            ⌯   ${prefix}post
+            ⌯   ${prefix}listonline
+            ⌯   ${prefix}listgc
+            ⌯   ${prefix}listpc
+            ⌯   ${prefix}getcase
+            ⌯   ${prefix}bangroup
+            ⌯   ${prefix}broadcast
+            ⌯   ${prefix}bye
+            ⌯   ${prefix}block
+            ⌯   ${prefix}unblock
+            ⌯   ${prefix}ban add
+            ⌯   ${prefix}ban del
+          
+           
+      〢━❅ Group Moderation ❅━〢
+          
+          
+            ⌯   ${prefix}add
+            ⌯   ${prefix}invite
+            ⌯   ${prefix}remove
+            ⌯   ${prefix}promote
+            ⌯   ${prefix}demote
+            ⌯   ${prefix}grouplink
+            ⌯   ${prefix}group-event
+            ⌯   ${prefix}groupsetting
+            ⌯   ${prefix}setname
+            ⌯   ${prefix}setgcpp
+            ⌯   ${prefix}setdesc
+            ⌯   ${prefix}revoke
+            ⌯   ${prefix}tagall
+            ⌯   ${prefix}hidetag
+            ⌯   ${prefix}nsfw
+            ⌯   ${prefix}nsnfwmenu
+          
+          
+        〢━❗ Anti Link ❗ ━〢
+          
+            
+            ⌯   ${prefix}antilinkgc
+            ⌯   ${prefix}antilinktt
+            ⌯   ${prefix}antilinkytch
+            ⌯   ${prefix}antilinkytch
+            ⌯   ${prefix}antilinkig
+            ⌯   ${prefix}antilinkfb
+            ⌯   ${prefix}antilinktwit
+            ⌯   ${prefix}antiwame
+            ⌯   ${prefix}antilinkall
+            
+          
+        〢━ 🔍 Search 🔎 ━〢
+            
+           
+            ⌯   ${prefix}play
+            ⌯   ${prefix}song
+            ⌯   ${prefix}video
+            ⌯   ${prefix}ytmp3
+            ⌯   ${prefix}ytmp4 
+            ⌯   ${prefix}yts
+            ⌯   ${prefix}lyrics
+            ⌯   ${prefix}movie
+            ⌯   ${prefix}google
+            ⌯   ${prefix}gimage
+            ⌯   ${prefix}pinterest
+            ⌯   ${prefix}wallpaper
+            ⌯   ${prefix}image
+            ⌯   ${prefix}searchgc
+            ⌯   ${prefix}wikimedia
+          
+          
+        〢━ 📈 Economy 📈 ━〢
+          
+          
+            ⌯   ${prefix}daily 
+            ⌯   ${prefix}wallet
+            ⌯   ${prefix}bank
+            ⌯   ${prefix}bankupgrade
+            ⌯   ${prefix}deposit
+            ⌯   ${prefix}withdraw 
+            ⌯   ${prefix}rob / attack
+            ⌯   ${prefix}transfer / give
+            ⌯   ${prefix}wealth / ritual
+          
+          
+        〢━ 🎮 Games 🎮 ━〢
+          
+          
+            ⌯   ${prefix}ttt / tictactoe
+            ⌯   ${prefix}truth
+            ⌯   ${prefix}dare
+            ⌯   ${prefix}spin / slot
+            ⌯   ${prefix}gamble / lottery
+           
+          
+         〢━ 🛠 Convert 🛠 ━〢
+           
+          
+            ⌯   ${prefix}sticker
+            ⌯   ${prefix}toimg
+            ⌯   ${prefix}tovideo
+            ⌯   ${prefix}togif
+            ⌯   ${prefix}tourl
+            ⌯   ${prefix}tomp3
+            ⌯   ${prefix}toaudio
+            ⌯   ${prefix}steal
+            ⌯   ${prefix}stickermeme
+            ⌯   ${prefix}emojimix
+          
+          
+        〢━ ◈ Sound Edit ◈ ━〢
+          
+          
+            ⌯   ${prefix}ringtone
+            ⌯   ${prefix}bass
+            ⌯   ${prefix}tempo
+            ⌯   ${prefix}blown
+            ⌯   ${prefix}robot
+            ⌯   ${prefix}slow
+            ⌯   ${prefix}squirrel
+            ⌯   ${prefix}deep
+            ⌯   ${prefix}earrape
+            ⌯   ${prefix}fast
+            ⌯   ${prefix}fat
+            ⌯   ${prefix}nightcore
+            ⌯   ${prefix}reverse
+          
+          
+        〢━ 📍 Reactions 📍 ━〢
+           
+          
+            ⌯   ${prefix}cuddle
+            ⌯   ${prefix}hug
+            ⌯   ${prefix}kiss
+            ⌯   ${prefix}bonk
+            ⌯   ${prefix}cry
+            ⌯   ${prefix}bully
+            ⌯   ${prefix}slap
+            ⌯   ${prefix}kill
+            ⌯   ${prefix}happy
+            ⌯   ${prefix}lick
+            ⌯   ${prefix}pat
+            ⌯   ${prefix}smug
+            ⌯   ${prefix}nom
+            ⌯   ${prefix}glomp
+            ⌯   ${prefix}bite
+            ⌯   ${prefix}yeet
+            ⌯   ${prefix}blush
+            ⌯   ${prefix}smile
+            ⌯   ${prefix}wave
+            ⌯   ${prefix}highfive
+            ⌯   ${prefix}handhold
+            ⌯   ${prefix}poke
+            ⌯   ${prefix}wink
+            ⌯   ${prefix}dance
+            ⌯   ${prefix}cringe
+          
+          
+      〢━ 🌌 Downloader 🌌 ━〢
+           
+          
+            ⌯   ${prefix}ytvideo
+            ⌯   ${prefix}mediafire
+            ⌯   ${prefix}instagram
+            ⌯   ${prefix}igtv
+            ⌯   ${prefix}facebook
+            ⌯   ${prefix}fbmp3
+            ⌯   ${prefix}twitter
+            ⌯   ${prefix}twittermp3
+            ⌯   ${prefix}tiktok
+            ⌯   ${prefix}tiktokaudio
+            ⌯   ${prefix}happymod
+            ⌯   ${prefix}tiktoknowm
+          
+           
+           〢━ 🎐 Fun 🎐 ━〢
+            
+          
+            ⌯   ${prefix}reaction
+            ⌯   ${prefix}cutecheck
+            ⌯   ${prefix}couple
+            ⌯   ${prefix}soulmate
+            ⌯   ${prefix}handsomecheck
+            ⌯   ${prefix}beautifulcheck
+            ⌯   ${prefix}awesomecheck
+            ⌯   ${prefix}greatcheck
+            ⌯   ${prefix}gaycheck
+            ⌯   ${prefix}uglycheck
+            ⌯   ${prefix}charactercheck
+            ⌯   ${prefix}lesbiancheck
+            ⌯   ${prefix}hornychec
+            ⌯   ${prefix}prettycheck
+            ⌯   ${prefix}lovelycheck
+          
+          
+          〢━ 🈴 Weeb 🈴 ━〢
+          
+            
+            ⌯   ${prefix}anime
+            ⌯   ${prefix}animestory
+            ⌯   ${prefix}awoo
+            ⌯   ${prefix}manga
+            ⌯   ${prefix}animewall
+            ⌯   ${prefix}animewallpaper2
+            ⌯   ${prefix}crosplay
+            ⌯   ${prefix}animenom
+            ⌯   ${prefix}feed
+            ⌯   ${prefix}foxgirl
+            ⌯   ${prefix}waifu
+            ⌯   ${prefix}waifu2
+            ⌯   ${prefix}waifu3
+            ⌯   ${prefix}loli
+            ⌯   ${prefix}coffee
+            ⌯   ${prefix}tickle
+            ⌯   ${prefix}meow
+            ⌯   ${prefix}neko
+            ⌯   ${prefix}neko2
+            ⌯   ${prefix}migumin
+            ⌯   ${prefix}wallpaper
+            ⌯   ${prefix}animequote
+           
+          
+      〢━ ♨ Informative ♨ ━〢
+            
+          
+            ⌯   ${prefix}quote
+            ⌯   ${prefix}weather
+            ⌯   ${prefix}covid
+            ⌯   ${prefix}earthquake
+            ⌯   ${prefix}wiki
+            ⌯   ${prefix}stalknumber
+          
+          
+        〢━ 🪁 Essentials 🪁 ━〢
+           
+            
+            ⌯   ${prefix}qr
+            ⌯   ${prefix}say
+            ⌯   ${prefix}fliptext
+            ⌯   ${prefix}toletter
+            ⌯   ${prefix}translate, 
+            
+           
+        〢━ 🎗 Others 🎗 ━〢
+          
+          
+            ⌯   ${prefix}stickermeme
+            ⌯   ${prefix}quotes
+            ⌯   ${prefix}report
+            ⌯   ${prefix}afk
+            ⌯   ${prefix}darkjoke
+            
+          
+            〢━━━━━━━━━━━━━━〢
+            ⌯   ${prefix}<Command name>.
+            ⌯  
+            ⌯  type ${prefix}support.
+            ⌯   for group support.
+            ⌯  
+            ⌯  
+            ⌯   🍁 Type ${prefix}help to get
+            ⌯     full command list.
+            ┬│▸
+            ╰────────────···▸`;
+
+          let msg = generateWAMessageFromContent(m.key.remoteJid, {
+            viewOnceMessage: {
+              message: {
+                "messageContextInfo": {
+                  "deviceListMetadata": {},
+                  "deviceListMetadataVersion": 2
+                },
+                interactiveMessage: proto.Message.InteractiveMessage.create({
+                  body: proto.Message.InteractiveMessage.Body.create({
+                    text: helpMenuText
+                  }),
+                  footer: proto.Message.InteractiveMessage.Footer.create({
+                    text: "            Powered by A17 2024"
+                  }),
+                  header: proto.Message.InteractiveMessage.Header.create({
+                    ...(await prepareWAMessageMedia({ image: { url: 'https://graph.org/file/4ca10c7029fcaee1003f7.jpg' } }, { upload: A17.waUploadToServer })),
 
 
-  〢━━━ 〄 Bot Info 〄 ━━━〢
+                    title: "                      Help Menu",
+                    subtitle: "Browse through the available commands",
+                    hasMediaAttachment: false
+                  }),
+                  nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                    buttons: [
+                      {
+                        "name": "quick_reply",
+                        "buttonParamsJson": `{"display_text":"OWNER","id":"${prefix}owner"}`
+                      },
+                      {
+                        "name": "cta_url",
+                        "buttonParamsJson": `{"display_text":"REPO","url":"https://github.com/Kai0071/A17","merchant_url":"https://github.com/Kai0071/A17"}`
+
+                      }
+                    ]
+                  })
+                })
+              }
+            }
+          }, {});
 
 
-  ⌯    *Bot usr name :* ${pushname} 
-  ⌯    *My prefix is :*  ${prefix}
-  ⌯    *Owner name :* ${global.OwnerName} 
-  ⌯    *Bot runtime :* ${runtime(process.uptime())} 
-  ⌯    *Platform :* Linux
+          if (!msg || !msg.key || !msg.key.remoteJid || !msg.key.id) {
+            const errorMessage = 'Error: Invalid message key.';
+            console.error(errorMessage);
+            return reply(errorMessage);
+          }
 
-
-  〢━━━ 〄 Core 〄 ━━━〢
-
-
-  ⌯     ${prefix}repo
-  ⌯     ${prefix}script
-  ⌯     ${prefix}speak
-  ⌯     ${prefix}support
-  ⌯     ${prefix}stalk
-  ⌯     ${prefix}setprefix
-  ⌯     ${prefix}auto-status
-  ⌯     ${prefix}auto-typing
-  ⌯     ${prefix}auto-recoding
-
-
-  〢━━━ ⌬ Owner Only ⌬ ━━━〢
-
-
-  ⌯     ${prefix}join
-  ⌯     ${prefix}self
-  ⌯     ${prefix}public
-  ⌯     ${prefix}restart
-  ⌯     ${prefix}sleep
-  ⌯     ${prefix}setbotpp
-  ⌯     ${prefix}post
-  ⌯     ${prefix}listonline
-  ⌯     ${prefix}listgc
-  ⌯     ${prefix}listpc
-  ⌯     ${prefix}getcase
-  ⌯     ${prefix}bangroup
-  ⌯     ${prefix}broadcast
-  ⌯     ${prefix}bye
-  ⌯     ${prefix}block
-  ⌯     ${prefix}unblock
-  ⌯     ${prefix}ban add
-  ⌯     ${prefix}ban del
-
- 
-  〢━━ ❅ Group Moderation ❅ ━━〢
-
-
-  ⌯     ${prefix}add
-  ⌯     ${prefix}invite
-  ⌯     ${prefix}remove
-  ⌯     ${prefix}promote
-  ⌯     ${prefix}demote
-  ⌯     ${prefix}grouplink
-  ⌯     ${prefix}group-event
-  ⌯     ${prefix}groupsetting
-  ⌯     ${prefix}setname
-  ⌯     ${prefix}setgcpp
-  ⌯     ${prefix}setdesc
-  ⌯     ${prefix}revoke
-  ⌯     ${prefix}tagall
-  ⌯     ${prefix}hidetag
-  ⌯     ${prefix}nsfw
-  ⌯     ${prefix}nsnfwmenu
-
-
-  〢━━━❗ *Anti Link ❗* ━━━〢
-
-  
-  ⌯     ${prefix}antilinkgc
-  ⌯     ${prefix}antilinktt
-  ⌯     ${prefix}antilinkytch
-  ⌯     ${prefix}antilinkytch
-  ⌯     ${prefix}antilinkig
-  ⌯     ${prefix}antilinkfb
-  ⌯     ${prefix}antilinktwit
-  ⌯     ${prefix}antiwame
-  ⌯     ${prefix}antilinkall
-  
-
-  〢━━━ 🔍 *Search* 🔎 ━━━〢
-  
- 
-  ⌯     ${prefix}play
-  ⌯     ${prefix}song
-  ⌯     ${prefix}video
-  ⌯     ${prefix}ytmp3
-  ⌯     ${prefix}ytmp4 
-  ⌯     ${prefix}yts
-  ⌯     ${prefix}lyrics
-  ⌯     ${prefix}movie
-  ⌯     ${prefix}google
-  ⌯     ${prefix}gimage
-  ⌯     ${prefix}pinterest
-  ⌯     ${prefix}wallpaper
-  ⌯     ${prefix}image
-  ⌯     ${prefix}searchgc
-  ⌯     ${prefix}wikimedia
-
-
-  〢━━━ 📈 *Economy* 📈 ━━━〢
-
-
-  ⌯     ${prefix}daily 
-  ⌯     ${prefix}wallet
-  ⌯     ${prefix}bank
-  ⌯     ${prefix}bankupgrade
-  ⌯     ${prefix}deposit
-  ⌯     ${prefix}withdraw 
-  ⌯     ${prefix}rob / attack
-  ⌯     ${prefix}transfer / give
-  ⌯     ${prefix}wealth / ritual
-
-
-  〢━━━ 🎮 *Games* 🎮 ━━━〢
-
-
-  ⌯     ${prefix}ttt / tictactoe
-  ⌯     ${prefix}truth
-  ⌯     ${prefix}dare
-  ⌯     ${prefix}spin / slot
-  ⌯     ${prefix}gamble / lottery
- 
-
-  〢━━━ 🛠️ *Convert* 🛠️ ━━━〢
- 
-
-  ⌯     ${prefix}sticker
-  ⌯     ${prefix}toimg
-  ⌯     ${prefix}tovideo
-  ⌯     ${prefix}togif
-  ⌯     ${prefix}tourl
-  ⌯     ${prefix}tomp3
-  ⌯     ${prefix}toaudio
-  ⌯     ${prefix}steal
-  ⌯     ${prefix}stickermeme
-  ⌯     ${prefix}emojimix
-
-
-  〢━━━ ◈ Sound Edit ◈ ━━━〢
-
-
-  ⌯     ${prefix}ringtone
-  ⌯     ${prefix}bass
-  ⌯     ${prefix}tempo
-  ⌯     ${prefix}blown
-  ⌯     ${prefix}robot
-  ⌯     ${prefix}slow
-  ⌯     ${prefix}squirrel
-  ⌯     ${prefix}deep
-  ⌯     ${prefix}earrape
-  ⌯     ${prefix}fast
-  ⌯     ${prefix}fat
-  ⌯     ${prefix}nightcore
-  ⌯     ${prefix}reverse
-
-
-  〢━━━ 📍 *Reactions* 📍 ━━━〢
- 
-
-  ⌯     ${prefix}cuddle
-  ⌯     ${prefix}hug
-  ⌯     ${prefix}kiss
-  ⌯     ${prefix}bonk
-  ⌯     ${prefix}cry
-  ⌯     ${prefix}bully
-  ⌯     ${prefix}slap
-  ⌯     ${prefix}kill
-  ⌯     ${prefix}happy
-  ⌯     ${prefix}lick
-  ⌯     ${prefix}pat
-  ⌯     ${prefix}smug
-  ⌯     ${prefix}nom
-  ⌯     ${prefix}glomp
-  ⌯     ${prefix}bite
-  ⌯     ${prefix}yeet
-  ⌯     ${prefix}blush
-  ⌯     ${prefix}smile
-  ⌯     ${prefix}wave
-  ⌯     ${prefix}highfive
-  ⌯     ${prefix}handhold
-  ⌯     ${prefix}poke
-  ⌯     ${prefix}wink
-  ⌯     ${prefix}dance
-  ⌯     ${prefix}cringe
-
-
-  〢━━ 🌌 *Downloader* 🌌 ━━〢
- 
-
-  ⌯     ${prefix}ytvideo
-  ⌯     ${prefix}mediafire
-  ⌯     ${prefix}instagram
-  ⌯     ${prefix}igtv
-  ⌯     ${prefix}facebook
-  ⌯     ${prefix}fbmp3
-  ⌯     ${prefix}twitter
-  ⌯     ${prefix}twittermp3
-  ⌯     ${prefix}tiktok
-  ⌯     ${prefix}tiktokaudio
-  ⌯     ${prefix}happymod
-  ⌯     ${prefix}tiktoknowm
-
- 
-  〢━━━ 🎐 *Fun* 🎐 ━━━〢
-  
-
-  ⌯     ${prefix}reaction
-  ⌯     ${prefix}cutecheck
-  ⌯     ${prefix}couple
-  ⌯     ${prefix}soulmate
-  ⌯     ${prefix}handsomecheck
-  ⌯     ${prefix}beautifulcheck
-  ⌯     ${prefix}awesomecheck
-  ⌯     ${prefix}greatcheck
-  ⌯     ${prefix}gaycheck
-  ⌯     ${prefix}uglycheck
-  ⌯     ${prefix}charactercheck
-  ⌯     ${prefix}lesbiancheck
-  ⌯     ${prefix}hornychec
-  ⌯     ${prefix}prettycheck
-  ⌯     ${prefix}lovelycheck
-
-
-  〢━━━ 🈴 *Weeb* 🈴 ━━━〢
-
-  
-  ⌯     ${prefix}anime
-  ⌯     ${prefix}animestory
-  ⌯     ${prefix}awoo
-  ⌯     ${prefix}manga
-  ⌯     ${prefix}animewall
-  ⌯     ${prefix}animewallpaper2
-  ⌯     ${prefix}crosplay
-  ⌯     ${prefix}animenom
-  ⌯     ${prefix}feed
-  ⌯     ${prefix}foxgirl
-  ⌯     ${prefix}waifu
-  ⌯     ${prefix}waifu2
-  ⌯     ${prefix}waifu3
-  ⌯     ${prefix}loli
-  ⌯     ${prefix}coffee
-  ⌯     ${prefix}tickle
-  ⌯     ${prefix}meow
-  ⌯     ${prefix}neko
-  ⌯     ${prefix}neko2
-  ⌯     ${prefix}migumin
-  ⌯     ${prefix}wallpaper
-  ⌯     ${prefix}animequote
- 
-
-  〢━━━ ♨️ *Informative* ♨️ ━━━〢
-  
-
-  ⌯     ${prefix}quote
-  ⌯     ${prefix}weather
-  ⌯     ${prefix}covid
-  ⌯     ${prefix}earthquake
-  ⌯     ${prefix}wiki
-  ⌯     ${prefix}stalknumber
-
-
-  〢━━━ 🪁 *Essentials* 🪁 ━━━〢
- 
-  
-  ⌯     ${prefix}qr
-  ⌯     ${prefix}say
-  ⌯     ${prefix}fliptext
-  ⌯     ${prefix}toletter
-  ⌯     ${prefix}translate, 
-  
- 
-  〢━━━ 🎗 *Others* 🎗 ━━━〢
-
-
-  ⌯     ${prefix}stickermeme
-  ⌯     ${prefix}quotes
-  ⌯     ${prefix}report
-  ⌯     ${prefix}afk
-  ⌯     ${prefix}darkjoke
-  
-
-  〢━━━ ⚠️ *NSFW* ⚠️ ━━━〢
- 
- 
-  ⌯   🍁 Type *${prefix}nsfw* then enable 
-  ⌯       NSFW (Admin only!)
-  ⌯    
-  ⌯   🍁 Then type *${prefix}nsfwmenu* for
-  ⌯       all NSFW commands.
-  ⌯    
-  ⌯   『  *${global.BotName}*  』
-  ⌯       Developed By: *Kai*
-  ⌯    
-  ⌯   🍁 To use any of these
-  ⌯       commands type.
-  ⌯    
-  ⌯   *${prefix}<Command name>*.
-  ⌯    
-  ⌯   🍁 To get Support Group link
-  ⌯     type *${prefix}support*.
-  ⌯    
-  ⌯    
-  ⌯   🍁 Type *${prefix}help* to get
-  ⌯       full command list.
-  ┬│▸
-  ╰────────────···▸`
-        let buttonMessage = {
-          video: fs.readFileSync('./system/A17_3.mp4'), gifPlayback: true,
-          caption: helpmenu,
-
-          headerType: 4
-
+          await A17.relayMessage(msg.key.remoteJid, msg.message, {
+            messageId: msg.key.id
+          });
+        } catch (error) {
+          console.error('Error generating and relaying message:', error);
+          return reply('Error generating and relaying message.');
         }
-        A17.sendMessage(m.chat, buttonMessage, { quoted: m })
-      }
+
         break;
+      }
+
 
 
       case '':
@@ -7143,8 +7169,7 @@ Hemlo, I am "A17" a WhatsApp bot create and recode by Kai to do everything that 
       // //  "parse-ms": "^1.1.0",
 
 
-
-      ///////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
       ///funmenu
 
       case 'stupidcheck': case 'uncleancheck':
@@ -7161,8 +7186,7 @@ Hemlo, I am "A17" a WhatsApp bot create and recode by Kai to do everything that 
 
 
 
-      ///////////////////////////////////////////////////
-      ///////////////////////////////////////////////////
+      //-----------------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -7225,9 +7249,16 @@ Hemlo, I am "A17" a WhatsApp bot create and recode by Kai to do everything that 
   } catch (err) {
     A17.sendMessage(`${ownertag}@s.whatsapp.net`, util.format(err), { quoted: m })
     console.log(err)
+    let e = String(err)
+    if (e.includes("not-authorized")) return
+    if (e.includes("already-exists")) return
+    if (e.includes("rate-overlimit")) return
+    if (e.includes("Connection Closed")) return
+    if (e.includes("Timed Out")) return
+    if (e.includes("Value not found")) return
+    if (e.includes("Socket connection timeout")) return
   }
 }
-
 
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
@@ -7236,4 +7267,3 @@ fs.watchFile(file, () => {
   delete require.cache[file]
   require(file)
 })
-
